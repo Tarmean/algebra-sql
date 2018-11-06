@@ -17,6 +17,7 @@ module Database.Algebra.SQL.Termination
 import           Data.List                    (intercalate)
 import           Data.Monoid
 import qualified Data.Set                     as S
+import Data.Semigroup as Sem
 
 import           Database.Algebra.SQL.Dialect
 
@@ -48,10 +49,12 @@ sortF = wrap SortF
 windowFunctionF = wrap WindowFunctionF
 aggrAndGroupingF = wrap AggrAndGroupingF
 
+instance Sem.Semigroup FeatureSet where
+    (<>) (F l) (F r) = F $ l `S.union` r
 instance Monoid FeatureSet where
     mempty              = noneF
-    mappend (F l) (F r) = F $ l `S.union` r
     mconcat fs          = F $ S.unions $ map unF fs
+    mappend = (<>)
 
 instance Show FeatureSet where
     show (F s) = "<" ++ intercalate ", " (map show $ S.toList s) ++ ">"

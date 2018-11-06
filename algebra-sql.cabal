@@ -13,6 +13,8 @@ Maintainer:	<alex@etc-network.de>
 Build-Type:     Simple
 
 library
+    if !impl(ghc >= 8.0)
+        build-depends: semigroups == 0.18.*
     buildable:        True
     build-depends:    base               >= 4.8 && < 5,
                       mtl                >= 2.1,
@@ -140,6 +142,11 @@ executable sqlgen
                       Database.Algebra.Table.Lang
                       Database.Algebra.Table.Render.Dot
 
+  if impl(ghc >= 8.0)
+    ghc-options: -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances
+  else
+    -- provide/emulate `Control.Monad.Fail` and `Data.Semigroups` API for pre-GHC8
+    build-depends: fail == 4.9.*, semigroups == 0.18.*
 source-repository head
     type:     git
     location: https://github.com/ulricha/algebra-sql
