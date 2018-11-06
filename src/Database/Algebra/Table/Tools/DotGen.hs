@@ -7,7 +7,7 @@ import           System.Environment
 import           System.Exit
 import           System.IO
 
-import           Data.Aeson
+import           Data.Aeson hiding (Options)
 import           Data.ByteString.Lazy.Char8        (pack)
 
 import           Data.Maybe
